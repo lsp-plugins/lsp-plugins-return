@@ -1,0 +1,151 @@
+/*
+ * Copyright (C) 2024 Linux Studio Plugins Project <https://lsp-plug.in/>
+ *           (C) 2024 Vladimir Sadovnikov <sadko4u@gmail.com>
+ *
+ * This file is part of lsp-plugins-return
+ * Created on: 26 авг 2024 г.
+ *
+ * lsp-plugins-return is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * lsp-plugins-return is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with lsp-plugins-return. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+#include <lsp-plug.in/plug-fw/meta/ports.h>
+#include <lsp-plug.in/shared/meta/developers.h>
+#include <private/meta/return.h>
+
+#define LSP_PLUGINS_RETURN_VERSION_MAJOR       1
+#define LSP_PLUGINS_RETURN_VERSION_MINOR       0
+#define LSP_PLUGINS_RETURN_VERSION_MICRO       0
+
+#define LSP_PLUGINS_RETURN_VERSION  \
+    LSP_MODULE_VERSION( \
+        LSP_PLUGINS_RETURN_VERSION_MAJOR, \
+        LSP_PLUGINS_RETURN_VERSION_MINOR, \
+        LSP_PLUGINS_RETURN_VERSION_MICRO  \
+    )
+
+namespace lsp
+{
+    namespace meta
+    {
+        //-------------------------------------------------------------------------
+        // Plugin metadata
+
+        // NOTE: Port identifiers should not be longer than 7 characters as it will overflow VST2 parameter name buffers
+        static const port_t return_mono_ports[] =
+        {
+            PORTS_MONO_PLUGIN,
+
+            BYPASS,
+            IN_GAIN,
+            OUT_GAIN,
+            LOG_CONTROL("g_retn", "Return gain", U_GAIN_AMP, Return::RETURN_GAIN),
+            RETURN_NAME("return", "Audio send connection point name"),
+            AUDIO_RETURN("rin", "Audio return input", 0, "return"),
+
+            PORTS_END
+        };
+
+        // NOTE: Port identifiers should not be longer than 7 characters as it will overflow VST2 parameter name buffers
+        static const port_t return_stereo_ports[] =
+        {
+            PORTS_STEREO_PLUGIN,
+
+            BYPASS,
+            IN_GAIN,
+            OUT_GAIN,
+            LOG_CONTROL("g_rtrn", "Return gain", U_GAIN_AMP, Return::RETURN_GAIN),
+            RETURN_NAME("return", "Audio send connection point name"),
+            AUDIO_RETURN("rin_l", "Audio return input left", 0, "return"),
+            AUDIO_RETURN("rin_r", "Audio return input right", 0, "return"),
+
+            PORTS_END
+        };
+
+        static const int plugin_classes[]       = { C_UTILITY, -1 };
+        static const int clap_features_mono[]   = { CF_AUDIO_EFFECT, CF_UTILITY, CF_MONO, -1 };
+        static const int clap_features_stereo[] = { CF_AUDIO_EFFECT, CF_UTILITY, CF_STEREO, -1 };
+
+        const meta::bundle_t return_bundle =
+        {
+            "return",
+            "Return",
+            B_UTILITIES,
+            "", // TODO: provide ID of the video on YouTube
+            "This plugin allows to perform audio return using the shared memory"
+        };
+
+        const plugin_t return_mono =
+        {
+            "Return Mono",
+            "Return Mono",
+            "Return Mono",
+            "R1M",
+            &developers::v_sadovnikov,
+            "return_mono",
+            {
+                LSP_LV2_URI("return_mono"),
+                LSP_LV2UI_URI("return_mono"),
+                "r01m",
+                LSP_VST3_UID("r01m    xxxx"),
+                LSP_VST3UI_UID("r01s    xxxx"),
+                0,
+                LSP_LADSPA_URI("return_mono"),
+                LSP_CLAP_URI("return_mono"),
+                LSP_GST_UID("return_mono"),
+            },
+            LSP_PLUGINS_RETURN_VERSION,
+            plugin_classes,
+            clap_features_mono,
+            E_DUMP_STATE | E_SHM_TRACKING,
+            return_mono_ports,
+            "util/return.xml",
+            NULL,
+            mono_plugin_port_groups,
+            &return_bundle
+        };
+
+        const plugin_t return_stereo =
+        {
+            "Return Stereo",
+            "Return Stereo",
+            "Return Stereo",
+            "R1S",
+            &developers::v_sadovnikov,
+            "return_stereo",
+            {
+                LSP_LV2_URI("return_stereo"),
+                LSP_LV2UI_URI("return_stereo"),
+                "r01s",
+                LSP_VST3_UID("r01s    yyyy"),
+                LSP_VST3UI_UID("r01s    yyyy"),
+                0,
+                LSP_LADSPA_URI("return_stereo"),
+                LSP_CLAP_URI("return_stereo"),
+                LSP_GST_UID("return_stereo"),
+            },
+            LSP_PLUGINS_RETURN_VERSION,
+            plugin_classes,
+            clap_features_stereo,
+            E_DUMP_STATE | E_SHM_TRACKING,
+            return_stereo_ports,
+            "util/return.xml",
+            NULL,
+            stereo_plugin_port_groups,
+            &return_bundle
+        };
+    } /* namespace meta */
+} /* namespace lsp */
+
+
+

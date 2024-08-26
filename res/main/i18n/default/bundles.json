@@ -1,0 +1,7 @@
+{
+	"return": {
+		"name": "Return",
+		"description": "This plugin allows to perform audio return using the shared memory"
+	}
+}
+
