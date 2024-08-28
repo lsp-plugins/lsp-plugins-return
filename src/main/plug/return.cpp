@@ -86,6 +86,21 @@ namespace lsp
             if (vChannels == NULL)
                 return;
 
+            for (size_t i=0; i<nChannels; ++i)
+            {
+                channel_t *c        = &vChannels[i];
+
+                c->sBypass.construct();
+
+                c->pIn              = NULL;
+                c->pOut             = NULL;
+                c->pReturn          = NULL;
+
+                c->pInMeter         = NULL;
+                c->pOutMeter        = NULL;
+                c->pReturnMeter     = NULL;
+            }
+
             size_t port_id      = 0;
 
             // Bind inputs and outpus
@@ -105,6 +120,16 @@ namespace lsp
             SKIP_PORT("Return name");
             for (size_t i=0; i<nChannels; ++i)
                 BIND_PORT(vChannels[i].pReturn);
+
+            lsp_trace("Binding meters");
+            for (size_t i=0; i<nChannels; ++i)
+            {
+                channel_t *c        = &vChannels[i];
+
+                BIND_PORT(c->pInMeter);
+                BIND_PORT(c->pReturnMeter);
+                BIND_PORT(c->pOutMeter);
+            }
         }
 
         void Return::destroy()
@@ -117,18 +142,39 @@ namespace lsp
         {
             if (vChannels != NULL)
             {
+                for (size_t i=0; i<nChannels; ++i)
+                {
+                    channel_t *c        = &vChannels[i];
+                    c->sBypass.destroy();
+                }
+
                 free(vChannels);
                 vChannels       = NULL;
             }
         }
 
+        void Return::update_sample_rate(long sr)
+        {
+            for (size_t i=0; i<nChannels; ++i)
+            {
+                channel_t *c        = &vChannels[i];
+                c->sBypass.init(sr);
+            }
+        }
+
         void Return::update_settings()
         {
-            float return_gain   = (pBypass->value() <= 0.5f) ? pReturnGain->value() : 0.0f;
+            const bool bypass   = pBypass->value() >= 0.5f;
 
             fInGain             = pInGain->value();
             fOutGain            = pOutGain->value();
-            fReturnGain         = return_gain * fInGain;
+            fReturnGain         = pReturnGain->value();
+
+            for (size_t i=0; i<nChannels; ++i)
+            {
+                channel_t *c        = &vChannels[i];
+                c->sBypass.set_bypass(bypass);
+            }
         }
 
         void Return::process(size_t samples)
@@ -142,10 +188,32 @@ namespace lsp
                 core::AudioBuffer *retn_buf = c->pReturn->buffer<core::AudioBuffer>();
                 float *retn         = ((retn_buf != NULL) && (retn_buf->active())) ? retn_buf->buffer() : NULL;
 
+                const float ilm     = dsp::abs_max(in, samples) * fInGain;
+                float rlm           = 0.0f;
+                float olm           = 0.0f;
+
                 if (retn != NULL)
-                    dsp::mix_copy2(out, in, retn, fInGain * fOutGain, fReturnGain * fOutGain, samples);
+                {
+                    // Process return signal part
+                    c->sBypass.process_wet(out, NULL, retn, fReturnGain, samples);
+                    rlm                 = dsp::abs_max(out, samples);
+
+                    // Mix return with input
+                    dsp::mix2(out, in, fOutGain, fInGain * fOutGain, samples);
+                    olm                 = dsp::abs_max(out, samples);
+                }
                 else
+                {
                     dsp::mul_k3(out, in, fInGain * fOutGain, samples);
+                    olm             = ilm * fOutGain;
+                }
+
+                if (c->pInMeter != NULL)
+                    c->pInMeter->set_value(ilm);
+                if (c->pReturnMeter != NULL)
+                    c->pReturnMeter->set_value(rlm);
+                if (c->pOutMeter != NULL)
+                    c->pOutMeter->set_value(olm);
             }
         }
 
@@ -153,7 +221,38 @@ namespace lsp
         {
             plug::Module::dump(v);
 
-            // TODO
+            v->write("nChannels", nChannels);
+            v->begin_array("vChannels", vChannels, nChannels);
+            {
+                for (size_t i=0; i<nChannels; ++i)
+                {
+                    const channel_t *c = &vChannels[i];
+
+                    v->begin_object(c, sizeof(channel_t));
+                    {
+                        v->write_object("sBypass", &c->sBypass);
+
+                        v->write("pIn", c->pIn);
+                        v->write("pOut", c->pOut);
+                        v->write("pReturn", c->pReturn);
+
+                        v->write("pInMeter", c->pInMeter);
+                        v->write("pOutMeter", c->pOutMeter);
+                        v->write("pReturnMeter", c->pReturnMeter);
+                    }
+                    v->end_object();
+                }
+            }
+            v->end_array();
+
+            v->write("fInGain", fInGain);
+            v->write("fOutGain", fOutGain);
+            v->write("fReturnGain", fReturnGain);
+
+            v->write("pBypass", pBypass);
+            v->write("pInGain", pInGain);
+            v->write("pOutGain", pOutGain);
+            v->write("pReturnGain", pReturnGain);
         }
 
     } /* namespace plugins */

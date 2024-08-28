@@ -53,6 +53,10 @@ namespace lsp
             RETURN_NAME("return", "Audio send connection point name"),
             AUDIO_RETURN("rin", "Audio return input", 0, "return"),
 
+            METER_GAIN("ilm", "Input level meter", GAIN_AMP_P_24_DB),
+            METER_GAIN("rlm", "Return level meter", GAIN_AMP_P_24_DB),
+            METER_GAIN("olm", "Output level meter", GAIN_AMP_P_24_DB),
+
             PORTS_END
         };
 
@@ -64,10 +68,17 @@ namespace lsp
             BYPASS,
             IN_GAIN,
             OUT_GAIN,
-            LOG_CONTROL("g_rtrn", "Return gain", U_GAIN_AMP, Return::RETURN_GAIN),
+            LOG_CONTROL("g_retn", "Return gain", U_GAIN_AMP, Return::RETURN_GAIN),
             RETURN_NAME("return", "Audio send connection point name"),
             AUDIO_RETURN("rin_l", "Audio return input left", 0, "return"),
             AUDIO_RETURN("rin_r", "Audio return input right", 0, "return"),
+
+            METER_GAIN("ilm_l", "Input level meter Left", GAIN_AMP_P_24_DB),
+            METER_GAIN("rlm_l", "Return level meter Left", GAIN_AMP_P_24_DB),
+            METER_GAIN("olm_l", "Output level meter Left", GAIN_AMP_P_24_DB),
+            METER_GAIN("ilm_r", "Input level meter Right", GAIN_AMP_P_24_DB),
+            METER_GAIN("rlm_r", "Return level meter Right", GAIN_AMP_P_24_DB),
+            METER_GAIN("olm_r", "Output level meter Right", GAIN_AMP_P_24_DB),
 
             PORTS_END
         };

@@ -34,9 +34,9 @@ namespace lsp
         typedef struct Return
         {
             static constexpr float  RETURN_GAIN_MIN     = GAIN_AMP_M_INF_DB;
-            static constexpr float  RETURN_GAIN_MAX     = GAIN_AMP_P_24_DB;
+            static constexpr float  RETURN_GAIN_MAX     = GAIN_AMP_P_60_DB;
             static constexpr float  RETURN_GAIN_DFL     = GAIN_AMP_0_DB;
-            static constexpr float  RETURN_GAIN_STEP    = 0.01f;
+            static constexpr float  RETURN_GAIN_STEP    = GAIN_AMP_S_0_5_DB;
         } Return;
 
         // Plugin type metadata
