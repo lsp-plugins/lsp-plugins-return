@@ -37,6 +37,13 @@ namespace lsp
         class Return: public plug::Module
         {
             private:
+                enum mode_t
+                {
+                    MODE_ADD,
+                    MODE_MUL,
+                    MODE_REPLACE
+                };
+
                 typedef struct channel_t
                 {
                     dspu::Bypass        sBypass;        // Bypass
@@ -56,14 +63,17 @@ namespace lsp
                 float               fInGain;            // Input gain
                 float               fOutGain;           // Output gain
                 float               fReturnGain;        // Return gain
+                mode_t              enMode;             // Return mode
 
                 plug::IPort        *pBypass;            // Bypass port
                 plug::IPort        *pInGain;            // Input gain
                 plug::IPort        *pOutGain;           // Output gain
+                plug::IPort        *pMode;              // Return mode
                 plug::IPort        *pReturnGain;        // Return gain
 
             protected:
                 void                do_destroy();
+                static mode_t       decode_mode(ssize_t mode);
 
             public:
                 explicit Return(const meta::plugin_t *meta);

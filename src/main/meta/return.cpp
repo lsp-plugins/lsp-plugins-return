@@ -41,6 +41,14 @@ namespace lsp
         //-------------------------------------------------------------------------
         // Plugin metadata
 
+        static const port_item_t return_mix_mode[] =
+        {
+            { "Add",                        "return.mode.add" },
+            { "Multiply",                   "return.mode.mul" },
+            { "Replace",                    "return.mode.rep" },
+            { NULL, NULL }
+        };
+
         // NOTE: Port identifiers should not be longer than 7 characters as it will overflow VST2 parameter name buffers
         static const port_t return_mono_ports[] =
         {
@@ -49,6 +57,7 @@ namespace lsp
             BYPASS,
             IN_GAIN,
             OUT_GAIN,
+            COMBO("mode", "Return mode", 0, return_mix_mode),
             LOG_CONTROL("g_retn", "Return gain", U_GAIN_AMP, Return::RETURN_GAIN),
             RETURN_NAME("return", "Audio return connection point name"),
             AUDIO_RETURN("rin", "Audio return input", 0, "return"),
@@ -68,6 +77,7 @@ namespace lsp
             BYPASS,
             IN_GAIN,
             OUT_GAIN,
+            COMBO("mode", "Return mode", 0, return_mix_mode),
             LOG_CONTROL("g_retn", "Return gain", U_GAIN_AMP, Return::RETURN_GAIN),
             RETURN_NAME("return", "Audio return  connection point name"),
             AUDIO_RETURN("rin_l", "Audio return input left", 0, "return"),

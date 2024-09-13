@@ -45,7 +45,10 @@
 		</cell>
 		
 		<knob id="g_in" />
-		<shmlink id="return" />
+		<vbox>
+			<shmlink id="return" />
+			<combo id="mode" />
+		</vbox>
 		<knob id="g_retn" />
 		<knob id="g_out" />
 		

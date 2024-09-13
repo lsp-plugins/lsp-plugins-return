@@ -64,10 +64,12 @@ namespace lsp
             fInGain         = GAIN_AMP_M_INF_DB;
             fOutGain        = GAIN_AMP_M_INF_DB;
             fReturnGain     = GAIN_AMP_M_INF_DB;
+            enMode          = MODE_ADD;
 
             pBypass         = NULL;
             pInGain         = NULL;
             pOutGain        = NULL;
+            pMode           = NULL;
             pReturnGain     = NULL;
         }
 
@@ -114,6 +116,7 @@ namespace lsp
             BIND_PORT(pBypass);
             BIND_PORT(pInGain);
             BIND_PORT(pOutGain);
+            BIND_PORT(pMode);
             BIND_PORT(pReturnGain);
 
             lsp_trace("Binding return ports");
@@ -153,6 +156,17 @@ namespace lsp
             }
         }
 
+        Return::mode_t Return::decode_mode(ssize_t mode)
+        {
+            switch (mode)
+            {
+                case 0: return MODE_ADD;
+                case 1: return MODE_MUL;
+                default: break;
+            }
+            return MODE_REPLACE;
+        }
+
         void Return::update_sample_rate(long sr)
         {
             for (size_t i=0; i<nChannels; ++i)
@@ -169,6 +183,7 @@ namespace lsp
             fInGain             = pInGain->value();
             fOutGain            = pOutGain->value();
             fReturnGain         = pReturnGain->value();
+            enMode              = decode_mode(pMode->value());
 
             for (size_t i=0; i<nChannels; ++i)
             {
@@ -199,12 +214,28 @@ namespace lsp
                     rlm                 = dsp::abs_max(out, samples);
 
                     // Mix return with input
-                    dsp::mix2(out, in, fOutGain, fInGain * fOutGain, samples);
+                    switch (enMode)
+                    {
+                        case MODE_ADD:
+                            dsp::mix2(out, in, fOutGain, fInGain * fOutGain, samples);
+                            break;
+                        case MODE_MUL:
+                            dsp::fmmul_k3(out, in, fInGain, samples);
+                            dsp::mul_k2(out, fOutGain, samples);
+                            break;
+                        case MODE_REPLACE:
+                        default:
+                            dsp::mul_k2(out, fOutGain, samples);
+                            break;
+                    }
                     olm                 = dsp::abs_max(out, samples);
                 }
                 else
                 {
-                    dsp::mul_k3(out, in, fInGain * fOutGain, samples);
+                    if (enMode == MODE_ADD)
+                        dsp::mul_k3(out, in, fInGain * fOutGain, samples);
+                    else
+                        dsp::fill_zero(out, samples);
                     olm             = ilm * fOutGain;
                 }
 
@@ -248,10 +279,12 @@ namespace lsp
             v->write("fInGain", fInGain);
             v->write("fOutGain", fOutGain);
             v->write("fReturnGain", fReturnGain);
+            v->write("enMode", int(enMode));
 
             v->write("pBypass", pBypass);
             v->write("pInGain", pInGain);
             v->write("pOutGain", pOutGain);
+            v->write("pMode", pMode);
             v->write("pReturnGain", pReturnGain);
         }
 
