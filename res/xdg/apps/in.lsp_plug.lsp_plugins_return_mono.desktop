@@ -1,9 +1,9 @@
 [Desktop Entry]
 Version=1.0
 Type=Application
-Name=TODO: Template Plugin
-GenericName=TODO: Template Plugin
-Comment=TODO: add description what plugin does
+Name=Return Mono
+GenericName=Return
+Comment=This plugin allows to perform audio return using the shared memory
 Exec=lsp-plugins-return-mono
 Icon=lsp-plugins
 Terminal=false
