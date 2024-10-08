@@ -102,7 +102,7 @@ namespace lsp
             "return",
             "Return",
             B_UTILITIES,
-            "", // TODO: provide ID of the video on YouTube
+            "x336_XxHp2o",
             "This plugin allows to perform audio return using the shared memory"
         };
 
