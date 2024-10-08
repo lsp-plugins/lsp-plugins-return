@@ -1,0 +1,10 @@
+{
+	"return": {
+		"mode": {
+			"add": "Add",
+			"mul": "Multiply",
+			"rep": "Replace"
+		}
+	}
+}
+
