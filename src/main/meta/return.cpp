@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2024 Linux Studio Plugins Project <https://lsp-plug.in/>
- *           (C) 2024 Vladimir Sadovnikov <sadko4u@gmail.com>
+ * Copyright (C) 2025 Linux Studio Plugins Project <https://lsp-plug.in/>
+ *           (C) 2025 Vladimir Sadovnikov <sadko4u@gmail.com>
  *
  * This file is part of lsp-plugins-return
  * Created on: 26 авг 2024 г.
@@ -58,7 +58,7 @@ namespace lsp
             IN_GAIN,
             OUT_GAIN,
             COMBO("mode", "Return mode", 0, return_mix_mode),
-            LOG_CONTROL("g_retn", "Return gain", U_GAIN_AMP, Return::RETURN_GAIN),
+            LOG_CONTROL("g_retn", "Return gain", "Return gain", U_GAIN_AMP, Return::RETURN_GAIN),
             RETURN_NAME("return", "Audio return connection point name"),
             AUDIO_RETURN("rin", "Audio return input", 0, "return"),
 
@@ -78,7 +78,7 @@ namespace lsp
             IN_GAIN,
             OUT_GAIN,
             COMBO("mode", "Return mode", 0, return_mix_mode),
-            LOG_CONTROL("g_retn", "Return gain", U_GAIN_AMP, Return::RETURN_GAIN),
+            LOG_CONTROL("g_retn", "Return gain", "Return gain", U_GAIN_AMP, Return::RETURN_GAIN),
             RETURN_NAME("return", "Audio return  connection point name"),
             AUDIO_RETURN("rin_l", "Audio return input left", 0, "return"),
             AUDIO_RETURN("rin_r", "Audio return input right", 1, "return"),
