@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2024 Linux Studio Plugins Project <https://lsp-plug.in/>
- *           (C) 2024 Vladimir Sadovnikov <sadko4u@gmail.com>
+ * Copyright (C) 2025 Linux Studio Plugins Project <https://lsp-plug.in/>
+ *           (C) 2025 Vladimir Sadovnikov <sadko4u@gmail.com>
  *
  * This file is part of lsp-plugins-return
  * Created on: 26 авг 2024 г.
@@ -25,7 +25,7 @@
 
 #define LSP_PLUGINS_RETURN_VERSION_MAJOR       1
 #define LSP_PLUGINS_RETURN_VERSION_MINOR       0
-#define LSP_PLUGINS_RETURN_VERSION_MICRO       3
+#define LSP_PLUGINS_RETURN_VERSION_MICRO       4
 
 #define LSP_PLUGINS_RETURN_VERSION  \
     LSP_MODULE_VERSION( \
@@ -57,8 +57,8 @@ namespace lsp
             BYPASS,
             IN_GAIN,
             OUT_GAIN,
-            COMBO("mode", "Return mode", 0, return_mix_mode),
-            LOG_CONTROL("g_retn", "Return gain", U_GAIN_AMP, Return::RETURN_GAIN),
+            COMBO("mode", "Return mode", "Mode", 0, return_mix_mode),
+            LOG_CONTROL("g_retn", "Return gain", "Return gain", U_GAIN_AMP, Return::RETURN_GAIN),
             RETURN_NAME("return", "Audio return connection point name"),
             AUDIO_RETURN("rin", "Audio return input", 0, "return"),
 
@@ -77,8 +77,8 @@ namespace lsp
             BYPASS,
             IN_GAIN,
             OUT_GAIN,
-            COMBO("mode", "Return mode", 0, return_mix_mode),
-            LOG_CONTROL("g_retn", "Return gain", U_GAIN_AMP, Return::RETURN_GAIN),
+            COMBO("mode", "Return mode", "Mode", 0, return_mix_mode),
+            LOG_CONTROL("g_retn", "Return gain", "Return gain", U_GAIN_AMP, Return::RETURN_GAIN),
             RETURN_NAME("return", "Audio return  connection point name"),
             AUDIO_RETURN("rin_l", "Audio return input left", 0, "return"),
             AUDIO_RETURN("rin_r", "Audio return input right", 1, "return"),
