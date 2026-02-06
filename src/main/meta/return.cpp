@@ -104,7 +104,7 @@ namespace lsp
             "Return",
             B_UTILITIES,
             "x336_XxHp2o",
-            "This plugin allows to perform audio return using the shared memory"
+            "This plugin allows to perform audio return using the shared memory."
         };
 
         const plugin_t return_mono =

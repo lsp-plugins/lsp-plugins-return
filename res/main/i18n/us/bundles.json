@@ -1,7 +1,11 @@
 {
 	"return": {
-		"name": "Return",
-		"description": "This plugin allows to perform audio return using the shared memory"
-	}
+		"description": "This plugin allows to perform audio return using the shared memory.",
+		"name": "Return"
+	},
+    "launcher": {
+        "return_mono": "Mono",
+		"return_stereo": "Stereo"
+    }
 }
 
