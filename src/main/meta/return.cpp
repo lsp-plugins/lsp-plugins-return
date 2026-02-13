@@ -131,7 +131,7 @@ namespace lsp
             clap_features_mono,
             E_DUMP_STATE | E_SHM_TRACKING,
             return_mono_ports,
-            "util/return.xml",
+            "plugins/util/return.xml",
             NULL,
             mono_plugin_port_groups,
             &return_bundle
@@ -162,7 +162,7 @@ namespace lsp
             clap_features_stereo,
             E_DUMP_STATE | E_SHM_TRACKING,
             return_stereo_ports,
-            "util/return.xml",
+            "plugins/util/return.xml",
             NULL,
             stereo_plugin_port_groups,
             &return_bundle
