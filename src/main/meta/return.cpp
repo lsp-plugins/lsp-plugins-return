@@ -134,7 +134,8 @@ namespace lsp
             "plugins/util/return.xml",
             NULL,
             mono_plugin_port_groups,
-            &return_bundle
+            &return_bundle,
+            2
         };
         LSP_REGISTER_METADATA(return_mono);
 
@@ -165,12 +166,10 @@ namespace lsp
             "plugins/util/return.xml",
             NULL,
             stereo_plugin_port_groups,
-            &return_bundle
+            &return_bundle,
+            1
         };
         LSP_REGISTER_METADATA(return_stereo);
 
     } /* namespace meta */
 } /* namespace lsp */
-
-
-
