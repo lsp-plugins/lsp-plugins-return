@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2025 Linux Studio Plugins Project <https://lsp-plug.in/>
- *           (C) 2025 Vladimir Sadovnikov <sadko4u@gmail.com>
+ * Copyright (C) 2026 Linux Studio Plugins Project <https://lsp-plug.in/>
+ *           (C) 2026 Vladimir Sadovnikov <sadko4u@gmail.com>
  *
  * This file is part of lsp-plugins-return
  * Created on: 26 авг 2024 г.
@@ -20,12 +20,13 @@
  */
 
 #include <lsp-plug.in/plug-fw/meta/ports.h>
+#include <lsp-plug.in/plug-fw/meta/registry.h>
 #include <lsp-plug.in/shared/meta/developers.h>
 #include <private/meta/return.h>
 
 #define LSP_PLUGINS_RETURN_VERSION_MAJOR       1
 #define LSP_PLUGINS_RETURN_VERSION_MINOR       0
-#define LSP_PLUGINS_RETURN_VERSION_MICRO       8
+#define LSP_PLUGINS_RETURN_VERSION_MICRO       9
 
 #define LSP_PLUGINS_RETURN_VERSION  \
     LSP_MODULE_VERSION( \
@@ -103,7 +104,7 @@ namespace lsp
             "Return",
             B_UTILITIES,
             "x336_XxHp2o",
-            "This plugin allows to perform audio return using the shared memory"
+            "This plugin allows to perform audio return using the shared memory."
         };
 
         const plugin_t return_mono =
@@ -130,11 +131,13 @@ namespace lsp
             clap_features_mono,
             E_DUMP_STATE | E_SHM_TRACKING,
             return_mono_ports,
-            "util/return.xml",
+            "plugins/util/return.xml",
             NULL,
             mono_plugin_port_groups,
-            &return_bundle
+            &return_bundle,
+            2
         };
+        LSP_REGISTER_METADATA(return_mono);
 
         const plugin_t return_stereo =
         {
@@ -160,13 +163,13 @@ namespace lsp
             clap_features_stereo,
             E_DUMP_STATE | E_SHM_TRACKING,
             return_stereo_ports,
-            "util/return.xml",
+            "plugins/util/return.xml",
             NULL,
             stereo_plugin_port_groups,
-            &return_bundle
+            &return_bundle,
+            1
         };
+        LSP_REGISTER_METADATA(return_stereo);
+
     } /* namespace meta */
 } /* namespace lsp */
-
-
-
